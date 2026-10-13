@@ -1,2 +1,2 @@
 # Cliniki
-Clici AI product
+Click product to automate booking request for appointment 
