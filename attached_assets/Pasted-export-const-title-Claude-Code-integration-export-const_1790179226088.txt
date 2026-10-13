@@ -1,0 +1,68 @@
+export const title = "Claude Code integration"
+export const description = "Set up an Untitled UI React with Claude Code in seconds. Our starter kits include providers, routing, and everything you need to get started."
+
+<Divider />
+
+## Prerequisites
+
+In order to quickly kickstart your project with Untitled UI and Claude Code, you need to have Claude Code installed in your machine.
+
+Please refer to the [Claude Code documentation](https://docs.anthropic.com/en/docs/claude-code/setup) to install it if you haven't already.
+
+<Divider />
+
+## Start using Untitled UI with Claude
+
+We have prepared starter kits that you can use with Claude Code so that you can get started with Untitled UI in seconds. First, choose your framework:
+
+<div className="not-typography grid grid-cols-1 gap-3 my-8 lg:grid-cols-2">
+    <FileCard type="nextjs" href="https://github.com/untitleduico/untitledui-nextjs-starter-kit" title="Next.js starter kit – Untitled UI" subtitle="Click to open Next.js starter kit." />
+    <FileCard type="vite" href="https://github.com/untitleduico/untitledui-vite-starter-kit" title="Vite starter kit – Untitled UI" subtitle="Click to open Vite starter kit." />
+</div>
+
+Then, clone the chosen starter kit in your local machine:
+
+<CodeTabs>
+  <CodeTabList items={[
+    { id: "nextjs", label: "Next.js" },
+    { id: "vite", label: "Vite" }
+  ]}/>
+  <CodeTabPanel id="nextjs">
+    ```bash
+    git clone https://github.com/untitleduico/untitledui-nextjs-starter-kit
+    ```
+  </CodeTabPanel>
+  <CodeTabPanel id="vite">
+    ```bash
+    git clone https://github.com/untitleduico/untitledui-vite-starter-kit
+    ```
+  </CodeTabPanel>
+</CodeTabs>
+
+Once you have the starter kit in your local machine, you can start using Untitled UI with Claude Code by just running the following command in the project directory:
+
+```bash
+claude
+```
+
+And now you should be able to freely prompt Claude Code to continue developing your project.
+
+<Divider />
+
+## CLAUDE.md instructions
+
+Our starter kits include a `CLAUDE.md` file that provides Claude Code with context about the Untitled UI component library. This file is automatically read by Claude Code when you start a session.
+
+If you want to add Untitled UI instructions to an existing project, download the `AGENT.md` file and save it as `CLAUDE.md` in your project root:
+
+```bash
+curl -o CLAUDE.md https://www.untitledui.com/react/AGENT.md
+```
+
+Or download it manually: [AGENT.md](https://www.untitledui.com/react/AGENT.md)
+
+<Divider />
+
+## MCP integration
+
+Looking to connect Claude Code to the Untitled UI component library via MCP (Model Context Protocol)? Check out our [MCP integration guide](/integrations/mcp) for setup instructions.

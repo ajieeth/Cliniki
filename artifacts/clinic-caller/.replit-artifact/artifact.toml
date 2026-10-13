@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Clinic Caller"
+description = "A clinic appointment command center for managing doctor availability, patient enquiries, and AI-assisted voice booking with ElevenLabs."
+version = "1.0.0"
+id = "artifacts/clinic-caller"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18570
+
+[services.development]
+run = "pnpm --filter @workspace/clinic-caller run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/clinic-caller", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/clinic-caller/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18570"
+BASE_PATH = "/"

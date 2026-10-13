@@ -1,0 +1,19 @@
+kind = "design-system"
+previewPath = "/clinic-caller-design-system/"
+title = "Clinic Caller Design System"
+description = "A calm, trustworthy healthcare operations design system for Clinic Caller, covering the shared color palette, typography, spacing, radii, and reusable interface foundations used by the responsive clinic dashboard."
+version = "1.0.0"
+id = "artifacts/clinic-caller-design-system"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/clinic-caller-design-system/" ]
+localPort = 24225
+
+[services.development]
+run = "pnpm --filter @workspace/clinic-caller-design-system run dev"
+
+[services.env]
+PORT = "24225"
+BASE_PATH = "/clinic-caller-design-system/"

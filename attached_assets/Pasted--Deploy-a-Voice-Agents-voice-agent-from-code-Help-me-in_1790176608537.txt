@@ -1,0 +1,47 @@
+# Deploy a Voice Agents voice agent from code
+
+Help me integrate **Voice Agents** (programmable voice-AI agents). Read the linked docs for exact request/response shapes. Don't invent endpoints. Ask me for any missing values (API key, agent id, connection id, phone number) before writing runnable code.
+
+## My workspace
+- Organization ID: `019e90d5-be96-7e52-be4a-8ed82cdebbc2`
+- Workspace ID: `019e90d5-becc-7368-93fb-b4856f7600bb`
+
+## Authentication
+- Base URL: `https://apps.sarvam.ai/api`
+- Header: `X-API-Key: <YOUR_API_KEY>`
+- Create keys: https://indus.sarvam.ai/samvaad/settings/api-key
+- Voice Agents API keys are separate from standard Sarvam API (TTS/STT) keys.
+
+## Documentation
+- Machine-readable index (start here): https://docs.sarvam.ai/conversations/llms.txt
+- Full docs: https://docs.sarvam.ai/conversations
+- In-app hub: https://indus.sarvam.ai/samvaad/deploy/with-code
+
+## APIs
+- **Instant outbound**: https://docs.sarvam.ai/conversations/deploy/deploy-with-code
+  In-app: https://indus.sarvam.ai/samvaad/deploy/with-code/recipes/instant
+- **Batch outbound calling**: https://docs.sarvam.ai/conversations/deploy/deploy-with-code
+  In-app: https://indus.sarvam.ai/samvaad/deploy/with-code/recipes/campaigns
+- **Inbound deployments**: https://docs.sarvam.ai/conversations/deploy/deploy-with-code
+  In-app: https://indus.sarvam.ai/samvaad/deploy/with-code/recipes/inbound
+- **Data fetch**: https://docs.sarvam.ai/conversations/deploy/deploy-with-code
+  In-app: https://indus.sarvam.ai/samvaad/deploy/with-code/recipes/data
+- **Agents SDK**: https://docs.sarvam.ai/conversations/deploy/deploy-with-code
+  In-app: https://indus.sarvam.ai/samvaad/deploy/with-code/recipes/sdk
+- **DND list**: https://docs.sarvam.ai/conversations/deploy/deploy-with-code
+  In-app: https://indus.sarvam.ai/samvaad/deploy/with-code/recipes/dnd
+
+## SDKs
+- Python: https://docs.sarvam.ai/conversations/deploy/deploy-with-code
+- Web / React Native / Flutter (proxy the key server-side): https://docs.sarvam.ai/conversations/deploy/deploy-with-code
+
+## Recipes
+- **Trigger Sarvam calls from MoEngage campaigns or Flows**: https://indus.sarvam.ai/samvaad/deploy/with-code/recipes/moengage-journey-triggered-calls
+- **Outbound with inbound callback**: https://indus.sarvam.ai/samvaad/deploy/with-code/recipes/outbound-campaign-with-callback
+- **Embed an agent on your website**: https://indus.sarvam.ai/samvaad/deploy/with-code/recipes/embed-agent-on-website
+- **Zapier**: https://indus.sarvam.ai/samvaad/deploy/with-code/recipes/trigger-calls-from-zapier
+- **Make**: https://indus.sarvam.ai/samvaad/deploy/with-code/recipes/trigger-calls-from-make
+- **HubSpot**: https://indus.sarvam.ai/samvaad/deploy/with-code/recipes/trigger-calls-from-hubspot-workflows
+- **n8n**: https://indus.sarvam.ai/samvaad/deploy/with-code/recipes/trigger-calls-from-n8n
+
+Confirm what I'm building, read the linked docs, then implement it in my stack.

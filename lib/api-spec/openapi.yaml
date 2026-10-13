@@ -1,0 +1,530 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: dashboard
+    description: Clinic overview
+  - name: doctors
+    description: Doctor and availability management
+  - name: appointments
+    description: Appointment booking
+  - name: enquiries
+    description: Patient enquiries
+  - name: voice
+    description: AI voice caller sessions
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get clinic dashboard summary
+      responses:
+        "200":
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+  /doctors:
+    get:
+      operationId: listDoctors
+      tags: [doctors]
+      summary: List clinic doctors
+      responses:
+        "200":
+          description: Doctors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Doctor"
+    post:
+      operationId: createDoctor
+      tags: [doctors]
+      summary: Add a doctor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DoctorInput"
+      responses:
+        "201":
+          description: Created doctor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Doctor"
+  /slots:
+    get:
+      operationId: listSlots
+      tags: [doctors]
+      summary: List available appointment slots
+      parameters:
+        - name: date
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: '^\d{4}-\d{2}-\d{2}$'
+        - name: doctorId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Appointment slots
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AppointmentSlot"
+    post:
+      operationId: createSlot
+      tags: [doctors]
+      summary: Create an availability slot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SlotInput"
+      responses:
+        "201":
+          description: Created slot
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppointmentSlot"
+  /appointments:
+    get:
+      operationId: listAppointments
+      tags: [appointments]
+      summary: List appointments
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [booked, confirmed, completed, cancelled]
+      responses:
+        "200":
+          description: Appointments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Appointment"
+    post:
+      operationId: createAppointment
+      tags: [appointments]
+      summary: Book an appointment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AppointmentInput"
+      responses:
+        "201":
+          description: Booked appointment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Appointment"
+  /appointments/{id}/status:
+    patch:
+      operationId: updateAppointmentStatus
+      tags: [appointments]
+      summary: Update appointment status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AppointmentStatusInput"
+      responses:
+        "200":
+          description: Updated appointment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Appointment"
+  /enquiries:
+    get:
+      operationId: listEnquiries
+      tags: [enquiries]
+      summary: List recent patient enquiries
+      responses:
+        "200":
+          description: Patient enquiries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PatientEnquiry"
+    post:
+      operationId: createEnquiry
+      tags: [enquiries]
+      summary: Create a patient enquiry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EnquiryInput"
+      responses:
+        "201":
+          description: Created enquiry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PatientEnquiry"
+  /voice/calls:
+    post:
+      operationId: startVoiceCall
+      tags: [voice]
+      summary: Start an AI-assisted appointment call
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VoiceCallInput"
+      responses:
+        "201":
+          description: Started voice call session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VoiceCall"
+  /voice/calls/{id}/turn:
+    post:
+      operationId: processVoiceTurn
+      tags: [voice]
+      summary: Process a patient message in a voice call
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VoiceTurnInput"
+      responses:
+        "200":
+          description: AI response and booking state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VoiceTurn"
+  /voice/speech:
+    post:
+      operationId: synthesizeSpeech
+      tags: [voice]
+      summary: Convert an assistant message to ElevenLabs speech
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SpeechInput"
+      responses:
+        "200":
+          description: Encoded speech audio
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SpeechOutput"
+  /sarvam/orgs/{orgId}/workspaces/{workspaceId}/apps/{appId}/url:
+    get:
+      operationId: getSarvamSignedUrl
+      tags: [voice]
+      summary: Create a signed Sarvam browser voice session URL
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema: { type: string, minLength: 1 }
+        - name: workspaceId
+          in: path
+          required: true
+          schema: { type: string, minLength: 1 }
+        - name: appId
+          in: path
+          required: true
+          schema: { type: string, minLength: 1 }
+      responses:
+        "200":
+          description: Single-use signed WebSocket URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SarvamSignedUrl"
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+    Doctor:
+      type: object
+      required: [id, name, specialty, initials, color, active]
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        specialty: { type: string }
+        initials: { type: string }
+        color: { type: string }
+        active: { type: boolean }
+    DoctorInput:
+      type: object
+      required: [name, specialty]
+      properties:
+        name: { type: string, minLength: 1 }
+        specialty: { type: string, minLength: 1 }
+    AppointmentSlot:
+      type: object
+      required: [id, doctorId, doctorName, date, time, durationMinutes, status]
+      properties:
+        id: { type: integer }
+        doctorId: { type: integer }
+        doctorName: { type: string }
+        date: { type: string, format: date }
+        time: { type: string }
+        durationMinutes: { type: integer }
+        status:
+          type: string
+          enum: [available, booked, blocked]
+    SlotInput:
+      type: object
+      required: [doctorId, date, time]
+      properties:
+        doctorId: { type: integer }
+        date: { type: string, format: date }
+        time: { type: string }
+        durationMinutes: { type: integer, minimum: 10, default: 30 }
+    Appointment:
+      type: object
+      required: [id, patientName, patientPhone, doctorId, doctorName, specialty, date, time, status, source]
+      properties:
+        id: { type: integer }
+        patientName: { type: string }
+        patientPhone: { type: string }
+        doctorId: { type: integer }
+        doctorName: { type: string }
+        specialty: { type: string }
+        date: { type: string, format: date }
+        time: { type: string }
+        reason: { type: ["string", "null"] }
+        status:
+          type: string
+          enum: [booked, confirmed, completed, cancelled]
+        source:
+          type: string
+          enum: [ai_call, front_desk, online]
+        createdAt: { type: string, format: date-time }
+    AppointmentInput:
+      type: object
+      required: [patientName, patientPhone, doctorId, date, time, source]
+      properties:
+        patientName: { type: string, minLength: 1 }
+        patientPhone: { type: string, minLength: 5 }
+        doctorId: { type: integer }
+        date: { type: string, format: date }
+        time: { type: string }
+        reason: { type: string }
+        source:
+          type: string
+          enum: [ai_call, front_desk, online]
+    AppointmentStatusInput:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [booked, confirmed, completed, cancelled]
+    PatientEnquiry:
+      type: object
+      required: [id, patientName, phone, summary, status, source, createdAt]
+      properties:
+        id: { type: integer }
+        patientName: { type: string }
+        phone: { type: string }
+        summary: { type: string }
+        status:
+          type: string
+          enum: [new, in_progress, booked, closed]
+        source:
+          type: string
+          enum: [ai_call, front_desk, website]
+        createdAt: { type: string, format: date-time }
+        appointmentId: { type: ["integer", "null"] }
+    EnquiryInput:
+      type: object
+      required: [patientName, phone, summary, source]
+      properties:
+        patientName: { type: string }
+        phone: { type: string }
+        summary: { type: string }
+        source:
+          type: string
+          enum: [ai_call, front_desk, website]
+    DashboardSummary:
+      type: object
+      required: [appointmentsToday, availableSlots, activeDoctors, aiCallsToday, bookingRate, sarvamVoiceUsage, upcomingAppointments, recentActivity]
+      properties:
+        appointmentsToday: { type: integer }
+        availableSlots: { type: integer }
+        activeDoctors: { type: integer }
+        aiCallsToday: { type: integer }
+        bookingRate: { type: number }
+        sarvamVoiceUsage:
+          $ref: "#/components/schemas/SarvamVoiceUsage"
+        upcomingAppointments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Appointment"
+        recentActivity:
+          type: array
+          items:
+            $ref: "#/components/schemas/Activity"
+    Activity:
+      type: object
+      required: [id, title, detail, time, type]
+      properties:
+        id: { type: integer }
+        title: { type: string }
+        detail: { type: string }
+        time: { type: string }
+        type:
+          type: string
+          enum: [booking, call, enquiry, slot]
+    SarvamVoiceUsage:
+      type: object
+      required: [status, calls, minutes, estimatedCostInr, ratePerMinuteInr]
+      properties:
+        status:
+          type: string
+          enum: [available, unavailable]
+        calls: { type: ["integer", "null"] }
+        minutes: { type: ["number", "null"] }
+        estimatedCostInr: { type: ["number", "null"] }
+        ratePerMinuteInr: { type: number }
+    VoiceCallInput:
+      type: object
+      required: [patientName, patientPhone]
+      properties:
+        patientName: { type: string }
+        patientPhone: { type: string }
+        initialMessage: { type: string }
+    VoiceCall:
+      type: object
+      required: [id, patientName, patientPhone, status, transcript, assistantMessage, suggestedSlots]
+      properties:
+        id: { type: integer }
+        patientName: { type: string }
+        patientPhone: { type: string }
+        status:
+          type: string
+          enum: [active, booked, ended]
+        transcript:
+          type: array
+          items:
+            $ref: "#/components/schemas/TranscriptMessage"
+        assistantMessage: { type: string }
+        suggestedSlots:
+          type: array
+          items:
+            $ref: "#/components/schemas/AppointmentSlot"
+        appointmentId: { type: ["integer", "null"] }
+    VoiceTurnInput:
+      type: object
+      required: [message]
+      properties:
+        message: { type: string, minLength: 1 }
+        slotId: { type: ["integer", "null"] }
+    VoiceTurn:
+      type: object
+      required: [callId, status, assistantMessage, transcript, suggestedSlots]
+      properties:
+        callId: { type: integer }
+        status:
+          type: string
+          enum: [active, booked, ended]
+        assistantMessage: { type: string }
+        transcript:
+          type: array
+          items:
+            $ref: "#/components/schemas/TranscriptMessage"
+        suggestedSlots:
+          type: array
+          items:
+            $ref: "#/components/schemas/AppointmentSlot"
+        appointmentId: { type: ["integer", "null"] }
+    TranscriptMessage:
+      type: object
+      required: [role, text]
+      properties:
+        role:
+          type: string
+          enum: [patient, assistant]
+        text: { type: string }
+    SpeechInput:
+      type: object
+      required: [text]
+      properties:
+        text: { type: string, minLength: 1, maxLength: 1000 }
+    SpeechOutput:
+      type: object
+      required: [audioBase64, contentType]
+      properties:
+        audioBase64: { type: string }
+        contentType: { type: string }
+    SarvamSignedUrl:
+      type: object
+      required: [url, reference_id]
+      properties:
+        url: { type: string }
+        reference_id: { type: string }
+
